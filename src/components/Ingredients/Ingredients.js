@@ -25,8 +25,8 @@ const httpReducer = (curHttpState, action) => {
       return { ...curHttpState, loading: false };
     case "ERROR":
       return { loading: false, error: action.errorData };
-    case 'CLEAR':
-      return {...curHttpState, error: null};
+    case "CLEAR":
+      return { ...curHttpState, error: null };
     default:
       throw new Error("Should not get there");
   }
@@ -65,7 +65,7 @@ const Ingredients = () => {
     console.log("rendering", userIngredients);
   }, [userIngredients]);
 
-  const addIngredientHandler = (ingredient) => {
+  const addIngredientHandler = useCallback(ingredient => {
     dispatchHttp({ type: "SEND" });
     fetch(
       "https://react-http-24641-default-rtdb.europe-west1.firebasedatabase.app/ingredients.json",
@@ -92,9 +92,9 @@ const Ingredients = () => {
           ingredient: { id: responseData.name, ...ingredient },
         });
       });
-  };
+  }, []);
 
-  const removeIngredientHandler = (id) => {
+  const removeIngredientHandler = useCallback(id => {
     dispatchHttp({ type: "SEND" });
     fetch(
       `https://react-http-24641-default-rtdb.europe-west1.firebasedatabase.app/ingredients/${id}.json`,
@@ -110,9 +110,9 @@ const Ingredients = () => {
         dispatch({ type: "DELETE", id: id });
       })
       .catch((error) => {
-        dispatchHttp({type: 'ERROR', errorData: error.message})
+        dispatchHttp({ type: "ERROR", errorData: error.message });
       });
-  };
+  }, []);
 
   const filteredIngredientsHandler = useCallback((filteredIngredients) => {
     //setUserIngredients(filteredIngredients);
@@ -120,12 +120,14 @@ const Ingredients = () => {
   }, []);
 
   const clearError = () => {
-    dispatchHttp({type: 'CLEAR'})
+    dispatchHttp({ type: "CLEAR" });
   };
 
   return (
     <div className="App">
-      {httpState.error && <ErrorModal onClose={clearError}>{httpState.error}</ErrorModal>}
+      {httpState.error && (
+        <ErrorModal onClose={clearError}>{httpState.error}</ErrorModal>
+      )}
       <IngredientForm
         onAddIngredient={addIngredientHandler}
         loading={httpState.loading}
