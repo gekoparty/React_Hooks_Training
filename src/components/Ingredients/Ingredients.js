@@ -97,7 +97,7 @@ const Ingredients = () => {
   const removeIngredientHandler = (id) => {
     dispatchHttp({ type: "SEND" });
     fetch(
-      `https://react-http-24641-default-rtdb.europe-west1.firebasedatabase.app/ingredients/${id}.son`,
+      `https://react-http-24641-default-rtdb.europe-west1.firebasedatabase.app/ingredients/${id}.json`,
       {
         method: "DELETE",
       }
